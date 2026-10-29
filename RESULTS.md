@@ -17,13 +17,12 @@
 - Pizza name returned by the API: **The Soft Margherita**
 
 ### Step 0.12 — Without a session (optional)
-> หากไม่ได้ทำ Step 0.12 ให้ระบุว่า `Not attempted (optional)`
 
 | Run | Result (Passed/Failed) | HTTP status / error (if any) |
 |---|---|---|
-| 1 | [กรอก] | [กรอก] |
-| 2 | [กรอก] | [กรอก] |
-| 3 | [กรอก] | [กรอก] |
+| 1 | FAILED | 401 Unauthorized |
+| 2 | FAILED | 401 Unauthorized |
+| 3 | FAILED | 401 Unauthorized |
 
 ### Step 0.16 — Excluded tools partitions
 Characteristic: **How many of the three tools are excluded?**
