@@ -1,3 +1,69 @@
+# API Testing Lab — ITDS362
+
+API Testing lab using Python, pytest, and requests to test the QuickPizza API.
+
+## Requirements
+
+- Python 3.10 or newer
+- Git
+- Internet connection
+- Windows PowerShell or another terminal
+
+## Setup
+
+1. Clone the repository:
+
+   ```powershell
+   git clone https://github.com/nitichot128/api-lab.git
+   cd api-lab
+   ```
+
+2. Create and activate a virtual environment (Windows):
+
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+## Running Tests
+
+Run all tests:
+
+```powershell
+pytest -v
+```
+
+Generate an HTML test report:
+
+```powershell
+pytest -v --html=report.html --self-contained-html
+```
+
+Open `report.html` in a browser to view the results.
+
+## Test Results
+
+- Passed: 32
+- Expected Failures (XFAIL): 1
+- Failed: 0
+- Total: 33 test cases
+
+The expected failure documents a known QuickPizza API defect involving the exclusion of all pizza cutting tools.
+
+## Files
+
+- `conftest.py` — Shared sessions and fixtures
+- `test_*.py` — API test cases
+- `RESULTS.md` — Lab results, defect report, and reflection
+- `report.html` — HTML test report
+- `requirements.txt` — Python dependencies
+
 ## Part A: Input Space Partitioning
 
 ### Input Domain Model — POST /api/ratings

@@ -107,8 +107,9 @@ GET 404 ถือว่าเหมาะสมเพราะช่วยซ่
 ### 7. Made-up token experiment
 **Question:** Create `madeup.txt` containing `Authorization: token 0000000000000000` and run `curl -H "@madeup.txt" https://quickpizza.grafana.com/api/ratings`. What comes back? Is it a defect? What could a stranger do with it on a real system?
 
-- Actual response/status: 200
-- Analysis / security implications: {"ratings":[{"id":1,"stars":5,"pizza_id":1},{"id":2,"stars":1,"pizza_id":2},{"id":3,"stars":1,"pizza_id":3},{"id":4,"stars":5,"pizza_id":9},{"id":5,"stars":5,"pizza_id":11},{"id":6,"stars":5,"pizza_id":14},{"id":7,"stars":5,"pizza_id":22},{"id":8,"stars":5,"pizza_id":24},{"id":11,"stars":5,"pizza_id":25},{"id":12,"stars":5,"pizza_id":1},{"id":15,"stars":5,"pizza_id":32},{"id":16,"stars":5,"pizza_id":34},{"id":18,"stars":5,"pizza_id":44},{"id":19,"stars":2,"pizza_id":1},{"id":20,"stars":5,"pizza_id":52},{"id":23,"stars":5,"pizza_id":63},{"id":24,"stars":5,"pizza_id":81},{"id":27,"stars":5,"pizza_id":89},{"id":28,"stars":5,"pizza_id":98},{"id":31,"stars":5,"pizza_id":102},{"id":32,"stars":5,"pizza_id":104},{"id":33,"stars":5,"pizza_id":106},{"id":34,"stars":2,"pizza_id":1},{"id":35,"stars":5,"pizza_id":116},{"id":36,"stars":5,"pizza_id":117},{"id":56,"stars":5,"pizza_id":190},{"id":59,"stars":1,"pizza_id":198},{"id":60,"stars":4,"pizza_id":198},{"id":61,"stars":4,"pizza_id":200},{"id":62,"stars":5,"pizza_id":200},{"id":63,"stars":5,"pizza_id":201},{"id":68,"stars":5,"pizza_id":229},{"id":69,"stars":5,"pizza_id":233},{"id":71,"stars":5,"pizza_id":259},{"id":75,"stars":5,"pizza_id":283},{"id":77,"stars":2,"pizza_id":1},{"id":92,"stars":5,"pizza_id":342},{"id":93,"stars":5,"pizza_id":345},{"id":94,"stars":5,"pizza_id":352},{"id":95,"stars":5,"pizza_id":353},{"id":96,"stars":5,"pizza_id":356},{"id":97,"stars":5,"pizza_id":369},{"id":98,"stars":5,"pizza_id":372},{"id":101,"stars":2,"pizza_id":1},{"id":102,"stars":5,"pizza_id":379},{"id":103,"stars":5,"pizza_id":386},{"id":104,"stars":5,"pizza_id":395},{"id":105,"stars":2,"pizza_id":1},{"id":109,"stars":5,"pizza_id":422},{"id":111,"stars":5,"pizza_id":439}]}
+- Actual HTTP Status: 200 OK
+- Actual Response: API ส่ง JSON ที่มีข้อมูล ratings กลับมา แม้ใช้ Token ปลอม 0000000000000000
+- Analysis / security implications: ถือเป็นข้อบกพร่องด้าน Authentication เพราะ API ยอมรับ Token ปลอมและอนุญาตให้อ่านข้อมูล Ratings ได้ ในระบบจริงผู้ไม่หวังดีอาจเดา Token เพื่อเข้าถึงข้อมูลของผู้อื่น ส่งผลให้เกิดความเสี่ยงด้านความปลอดภัยและข้อมูลรั่วไหล
 
 ### 8. API tests vs web-page tests
 **Question:** Name one thing that an API test checks better than a test through web pages, and one thing that only a web-page test can check.
@@ -120,8 +121,8 @@ GET 404 ถือว่าเหมาะสมเพราะช่วยซ่
 ## Final test run (optional record)
 
 - Command: `pytest -v --html=report.html --self-contained-html`
-- Passed: [กรอก]
-- Failed: [กรอก]
-- Xfailed: [กรอก]
+- Passed: 32
+- Failed: 0
+- Xfailed: 1
 - Report file: `report.html`
-- Date tested: [กรอกวันที่]
+- Date tested: 29-Oct-2026

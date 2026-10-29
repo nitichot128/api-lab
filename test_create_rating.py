@@ -4,15 +4,9 @@ import pytest
 STARS_ERROR = "number of stars must be between 1 and 5 (inclusive)"
 
 
-def assert_json_error(res, expected_status):
-    """Check the status code and JSON error response."""
-    assert res.status_code == expected_status, (
-        f"Expected {expected_status}, got {res.status_code}: {res.text}"
-    )
-    body = res.json()
-    assert isinstance(body, dict)
-    assert isinstance(body.get("error"), str)
-    assert body["error"] != ""
+def assert_json_error(res, expected_status, expected_message):
+    assert res.status_code == expected_status
+    assert res.json() == {"error": expected_message}
 
 
 # Base choice: valid stars, integer type, existing pizza, own token.
@@ -35,24 +29,36 @@ def test_stars_out_of_range(api, auth, pizza_id, stars):
     assert res.json() == {"error": STARS_ERROR}
 
 
-# C2: decimal, string and missing stars must be rejected.
+# C2: Decimal, string, and missing stars must be rejected.
 @pytest.mark.parametrize(
-    "case, stars",
+    "case, stars, expected_message",
     [
-        ("decimal", 3.5),
-        ("string", "3"),
-        ("missing", None),
+        (
+            "decimal",
+            3.5,
+            "json: cannot unmarshal number 3.5 into Go struct field Rating.stars of type int"
+        ),
+        (
+            "string",
+            "3",
+            "json: cannot unmarshal string into Go struct field Rating.stars of type int"
+        ),
+        (
+            "missing",
+            None,
+            STARS_ERROR
+        ),
     ],
     ids=["decimal", "string", "missing"]
 )
-def test_invalid_stars_type(api, auth, pizza_id, case, stars):
+def test_invalid_stars_type(api, auth, pizza_id, case, stars, expected_message):
     new = {"pizza_id": pizza_id}
 
     if case != "missing":
         new["stars"] = stars
 
     res = api.post("/api/ratings", json=new, headers=auth)
-    assert_json_error(res, 400)
+    assert_json_error(res, 400, expected_message)
 
 
 # C3: rating with a nonexistent pizza ID must be rejected.
@@ -60,7 +66,7 @@ def test_nonexistent_pizza(api, auth):
     new = {"pizza_id": 999999999, "stars": 3}
     res = api.post("/api/ratings", json=new, headers=auth)
 
-    assert_json_error(res, 400)
+    assert_json_error(res, 400, "pizza ID 999999999 not found")
 
 
 # C4: a request without an Authorization token is rejected.
@@ -68,7 +74,7 @@ def test_missing_token(api, pizza_id):
     new = {"pizza_id": pizza_id, "stars": 3}
     res = api.post("/api/ratings", json=new)
 
-    assert_json_error(res, 401)
+    assert_json_error(res, 401, "authentication failed")
 
 
 # C4: a token with an invalid length is rejected.
@@ -82,4 +88,4 @@ def test_invalid_token_length(api, pizza_id):
         headers=bad_auth
     )
 
-    assert_json_error(res, 401)
+    assert_json_error(res, 401, "authentication failed")
