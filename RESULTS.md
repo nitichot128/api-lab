@@ -29,21 +29,35 @@ Characteristic: **How many of the three tools are excluded?**
 
 | Block | Example `excludedTools` | Test result / HTTP status |
 |---|---|---|
-| 0 excluded | `[]` | [กรอก] |
-| 1 excluded | `["Knife"]` | [กรอก] |
-| 2 excluded | `["Knife", "Scissors"]` | [กรอก] |
-| 3 excluded | `["Knife", "Pizza cutter", "Scissors"]` | [กรอก] |
+| 0 excluded | `[]` | Pass/200 |
+| 1 excluded | `["Knife"]` | Pass/200 |
+| 2 excluded | `["Knife", "Scissors"]` | Pass/200 |
+| 3 excluded | `["Knife", "Pizza cutter", "Scissors"]` | Failed/500 |
 
-- Block that revealed the defect: **[กรอก]**
-- curl verification command / body file used: `[กรอก]`
+- Block that revealed the defect: **3**
+- curl verification command: `curl.exe -i -H "@auth.txt" -H "Content-Type: application/json" --data-binary "@excluded.json" https://quickpizza.grafana.com/api/pizza`
+- body file used: `{"excludedTools": ["Knife","Pizza cutter","Scissors"]}`
 
 ## Defect report
 
-- **Title:** [กรอกชื่อปัญหา]
-- **Request:** [ระบุ method, URL, headers ที่จำเป็น และ JSON body]
-- **Expected result:** [ระบุ expected status code และ JSON error message]
-- **Actual result:** [ระบุ actual status code และ response body ที่สังเกตได้]
-- **Severity:** [กรอกระดับความรุนแรงพร้อมเหตุผล]
+- **Title:** HTTP 500 Internal Server Error when all pizza cutting tools are excluded.
+- **Request:**
+    Method: POST
+    URL: https://quickpizza.grafana.com/api/pizza
+    Headers:
+        Authorization: token abcdef0123456789
+        Content-Type: application/json
+    JSON Body:
+    {
+        "excludedTools": [
+            "Knife",
+            "Pizza cutter",
+            "Scissors"
+        ]
+    }
+- **Expected result:** HTTP 400 Bad Request with a JSON error message explaining that no pizza can satisfy the request.
+- **Actual result:** HTTP 500 Internal Server Error with an empty response body (Content-Length: 0). The API did not return a JSON error message.
+- **Severity:** Medium — The API does not handle a request that excludes all available cutting tools correctly. Instead of returning a clear client error, it returns an internal server error without an explanation, making it difficult for clients to handle the failure.
 
 ## Part A
 
