@@ -65,9 +65,9 @@ Characteristic: **How many of the three tools are excluded?**
 
 | Attempt by another user | Actual HTTP status | Rating unchanged when checked by owner? |
 |---|---|---|
-| Read (GET) | [กรอก] | [กรอก] |
-| Update (PUT) | [กรอก] | [กรอก] |
-| Delete (DELETE) | [กรอก] | [กรอก] |
+| Read (GET) | 404 Not Found | Yes |
+| Update (PUT) | 400 Bad Request | Yes |
+| Delete (DELETE) | 400 Bad Request | Yes |
 
 ## Part B — Reflection
 
